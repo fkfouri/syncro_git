@@ -19,6 +19,7 @@ taskipy = "^1.12.2"
 ruff = "^0.1.6"
 isort = "^5.12.0"
 black = "^23.11.0"
+pytest-cov = "^4.1.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -96,9 +97,12 @@ extend-exclude='''
 # Poetry Scripts & Taskipy
 #######################################################
 [tool.poetry.scripts]
-syncro = "syncro_git.cli:app"
+syncro = "syncro_git.cli:syncro"
 
 
 [tool.taskipy.tasks]
 pre_lint = "echo 'Black + Isort \n' && black . && isort ."
 lint = "echo 'RUFF \n' && ruff check . "
+
+test = "coverage run -m pytest -s -x -v --junitxml='./.pytest_cache/test-result.xml'"
+post_test = "coverage report -m && coverage html"

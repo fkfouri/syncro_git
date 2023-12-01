@@ -9,9 +9,9 @@ from git import Repo  # pip install gitpython
 from rich.console import Console
 
 
-
 THIS_PATH = Path(dirname(sys.executable)) if getattr(sys, "frozen", False) else Path(dirname(__file__))
-ROOT_PAHT = THIS_PATH.parents[0]
+ROOT_PATH = THIS_PATH.parents[0]
+
 
 ORIGIN = "git@gitlab.gerdau.digital:analytics/databricks/dna-engineer-template.git"
 DESTINY = "git@gitlab.ubirata.ai:templates_repo/gerdau_dna_engineer_template.git"
@@ -28,10 +28,14 @@ console = Console(style="yellow")
 
 @click.command()
 @click.option("--origin", "-o", required=True, default=ORIGIN)
-@click.option("--folder", "-f", required=True, default=FOLDER_NAME)
 @click.option("--destiny", "-d", required=True, default=DESTINY)
+@click.option("--folder", "-f", required=False, default=None)
 @click.option("--branch", "-b", required=False, default=None)
-def app(origin, folder, branch, destiny):
+@click.option("--unit_test", required=False, default=False, type=bool)
+def syncro(origin, folder, branch, destiny, unit_test):
+    """This command will syncronize two git repositories
+    """    
+    folder = get_folder(folder, origin)
     target_dir = get_target_dir(folder)
 
     console.print(f"""
@@ -74,21 +78,30 @@ origin: [purple]{origin}[/]
     # log.append(git.remote("-v"))
     # log.append(git.branch('-v', '-a'))
 
-    for branch in repo.branches:
-        if 'feature' not in branch.name:
-            refspec = "{}:{}".format(branch, branch)
-            console.print(f"Push [bold blue]{branch}[/] to [bold blue]{REMOTE_CLONE}[/]")
-            remote.push(refspec=refspec)
+
+    if not unit_test:
+        for branch in repo.branches:
+            if 'feature' not in branch.name:
+                refspec = "{}:{}".format(branch, branch)
+                console.print(f"Push [bold blue]{branch}[/] to [bold blue]{REMOTE_CLONE}[/]")
+                remote.push(refspec=refspec)
 
     console.print(":thumbs_up: Done !!!")
 
+
+
+def get_folder(folder, origin):
+    if folder is None:
+        folder = origin.split("/")[-1].replace(".git","")
+    
+    return folder
 
 
 def get_target_dir(folder):
     if ".temp" not in folder.lower():
         folder = f".temp-{folder}"
 
-    return ROOT_PAHT.joinpath(folder)
+    return ROOT_PATH.joinpath(folder)
 
 
 def get_all_branches(repo: Repo):
@@ -103,5 +116,6 @@ def get_all_branches(repo: Repo):
     return repo
 
 
+
 if __name__ == "__main__":
-    app()
+    syncro()
