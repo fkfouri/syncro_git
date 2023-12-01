@@ -47,8 +47,8 @@ origin: [purple]{origin}[/]
     repo = None
     if target_dir.exists():
         try:
+            console.print(f"Reading the target_dir [blue]{target_dir}[/]")
             repo = Repo(target_dir)
-            console.print(f"Clone from [blue]{origin}[/]")
         except Exception as e:
             console.print(f"It's not a valid path. The address [red]{target_dir}[/] will be recreated.", style="red")
             shutil.rmtree(target_dir)
@@ -79,7 +79,7 @@ origin: [purple]{origin}[/]
     # log.append(git.branch('-v', '-a'))
 
 
-    if not unit_test:
+    if not unit_test: # pragma: no cover
         for branch in repo.branches:
             if 'feature' not in branch.name:
                 refspec = "{}:{}".format(branch, branch)
@@ -112,10 +112,11 @@ def get_all_branches(repo: Repo):
         try:
             console.print(f"Get branch from [bold blue]{b.name}[/]")
             repo.git.checkout("-B", b.name.split("/")[1], b.name)
-        except: ...
+        except:  # pragma: no cover
+            ...
     return repo
 
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     syncro()
