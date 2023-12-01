@@ -1,0 +1,95 @@
+[tool.poetry]
+name = "syncro-git"
+version = "0.1.0"
+description = ""
+authors = ["fabio.kfouri <fabio.kfouri@ubirata.ai>"]
+readme = "README.md"
+
+
+#######################################################
+# LINTERS - RUFF | Isort | Black
+#######################################################
+[tool.ruff]
+# Enable the pycodestyle (`E`) and Pyflakes (`F`) rules by default.
+# Unlike Flake8, Ruff doesn't enable pycodestyle warnings (`W`) or
+# McCabe complexity (`C901`) by default.
+select = ["E", "F"]
+ignore = []
+# Allow autofix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+unfixable = []
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+    ".temp*"
+]
+per-file-ignores = {}
+# Same as Black.
+line-length = 120
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+# Assume Python 3.9.
+target-version = "py39"
+
+
+[tool.isort]
+include_trailing_comma = true
+force_grid_wrap = 0
+line_length = 120
+profile = "black"
+skip = [".temp-*", "venv", ".venv"]
+
+
+[tool.black]
+line-length = 120
+target-version = ['py37', 'py38']
+include = '\.pyi?$'
+preview = true
+
+#######################################################
+# Dependencies
+#######################################################
+[tool.poetry.dependencies]
+python = "^3.9"
+gitpython = "^3.1.40"
+click = "^8.1.7"
+
+[tool.poetry.group.dev.dependencies]
+taskipy = "^1.12.2"
+ruff = "^0.1.6"
+isort = "^5.12.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+#######################################################
+# Poetry Scripts & Taskipy
+#######################################################
+[tool.poetry.scripts]
+syncro = "syncro_git.cli:app"
+
+
+[tool.taskipy.tasks]
+pre_lint = "echo 'Black + Isort \n' && black . && isort ."
+lint = "echo 'RUFF \n' && ruff check . "
