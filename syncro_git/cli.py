@@ -29,21 +29,22 @@ console = Console(style="yellow")
 @click.command()
 @click.option("--origin", "-o", required=True, default=ORIGIN)
 @click.option("--folder", "-f", required=True, default=FOLDER_NAME)
+@click.option("--destiny", "-d", required=True, default=DESTINY)
 @click.option("--branch", "-b", required=False, default=None)
-@click.option("--destiny", "-d", required=False, default=DESTINY)
 def app(origin, folder, branch, destiny):
     target_dir = get_target_dir(folder)
 
     console.print(f"""
 Path to be used as bridge: [purple]{folder}[/]
 origin: [purple]{origin}[/]
-{REMOTE_CLONE}: [purple]{destiny}[/] """)
+{REMOTE_CLONE}: [purple]{destiny}[/] 
+ """)
 
     repo = None
     if target_dir.exists():
         try:
             repo = Repo(target_dir)
-            console.print(f"Clone from [blue]{origin}[/b]")
+            console.print(f"Clone from [blue]{origin}[/]")
         except Exception as e:
             console.print(f"It's not a valid path. The address [red]{target_dir}[/] will be recreated.", style="red")
             shutil.rmtree(target_dir)
