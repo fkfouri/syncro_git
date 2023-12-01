@@ -16,7 +16,7 @@ def clean_folders():
 
 def test_cli_help():
     runner = CliRunner()
-    result = runner.invoke(cli.syncro, ["--help"])
+    result = runner.invoke(cli.syncro_git, ["--help"])
     assert result.exit_code == 0
     assert "This command will syncronize two git repositories" in result.output
 
@@ -24,7 +24,7 @@ def test_cli_help():
 def test_cli_template():
     runner = CliRunner()
     result = runner.invoke(
-        cli.syncro,
+        cli.syncro_git,
         [
             "-o",
             "git@gitlab.gerdau.digital:analytics/databricks/dna-engineer-template.git",
@@ -46,7 +46,7 @@ def test_exiting_folder():
 
     runner = CliRunner()
     result = runner.invoke(
-        cli.syncro,
+        cli.syncro_git,
         [
             "-o",
             "git@gitlab.gerdau.digital:analytics/databricks/dna-engineer-template.git",

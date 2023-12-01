@@ -11,28 +11,28 @@ from rich.console import Console
 
 THIS_PATH = Path(dirname(sys.executable)) if getattr(sys, "frozen", False) else Path(dirname(__file__))
 ROOT_PATH = THIS_PATH.parents[0]
-
-
-ORIGIN = "git@gitlab.gerdau.digital:analytics/databricks/dna-engineer-template.git"
-DESTINY = "git@gitlab.ubirata.ai:templates_repo/gerdau_dna_engineer_template.git"
-FOLDER_NAME = ".temp-dna-engineer-template"
-
-ORIGIN = "git@gitlab.gerdau.digital:Industrial/gemeosupplychaintmecpin-lakehouse.git"
-FOLDER_NAME = "gemeosupplychaintmecpin-lakehouse"
-DESTINY = "git@gitlab.ubirata.ai:templates_repo/test.git"
-DESTINY = "git@gitlab.ubirata.ai:tmec/lakehouse.git"
-
 REMOTE_CLONE = "origin_clone"
+
+
+# ORIGIN = "git@gitlab.gerdau.digital:analytics/databricks/dna-engineer-template.git"
+# DESTINY = "git@gitlab.ubirata.ai:templates_repo/gerdau_dna_engineer_template.git"
+
+
+# ORIGIN = "git@gitlab.gerdau.digital:Industrial/gemeosupplychaintmecpin-lakehouse.git"
+# FOLDER_NAME = "gemeosupplychaintmecpin-lakehouse"
+# DESTINY = "git@gitlab.ubirata.ai:templates_repo/test.git"
+# DESTINY = "git@gitlab.ubirata.ai:tmec/lakehouse.git"
+
 
 console = Console(style="yellow")
 
 @click.command()
-@click.option("--origin", "-o", required=True, default=ORIGIN)
-@click.option("--destiny", "-d", required=True, default=DESTINY)
+@click.option("--origin", "-o", required=True, default=None)
+@click.option("--destiny", "-d", required=True, default=None)
 @click.option("--folder", "-f", required=False, default=None)
 @click.option("--branch", "-b", required=False, default=None)
 @click.option("--unit_test", required=False, default=False, type=bool)
-def syncro(origin, folder, branch, destiny, unit_test):
+def syncro_git(origin, folder, branch, destiny, unit_test):
     """This command will syncronize two git repositories
     """    
     folder = get_folder(folder, origin)
@@ -41,7 +41,8 @@ def syncro(origin, folder, branch, destiny, unit_test):
     console.print(f"""
 Path to be used as bridge: [purple]{folder}[/]
 origin: [purple]{origin}[/]
-{REMOTE_CLONE}: [purple]{destiny}[/] 
+{REMOTE_CLONE}: [purple]{destiny}[/]
+WORK_DIR: [purple]{target_dir}[/]
  """)
 
     repo = None
@@ -119,4 +120,4 @@ def get_all_branches(repo: Repo):
 
 
 if __name__ == "__main__":  # pragma: no cover
-    syncro()
+    syncro_git()

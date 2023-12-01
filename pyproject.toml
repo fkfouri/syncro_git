@@ -102,7 +102,7 @@ log_cli_format = "[pytest][%(asctime)s][%(levelname)s][%(module)s][%(funcName)s]
 log_cli_date_format = "%Y-%m-%d %H:%M:%S"
 log_level = "INFO"
 testpaths = [
-    "syncro_git",
+    "tests",
 ]
 
 [tool.coverage.run]
@@ -127,7 +127,7 @@ omit = [
 # Poetry Scripts & Taskipy
 #######################################################
 [tool.poetry.scripts]
-syncro = "syncro_git.cli:syncro"
+syncro_git = "syncro_git.cli:syncro_git"
 
 
 [tool.taskipy.tasks]
@@ -136,3 +136,9 @@ lint = "echo 'RUFF \n' && ruff check . "
 
 test = "coverage run -m pytest -s -x -v --junitxml='./.pytest_cache/test-result.xml'"
 post_test = "coverage report -m && coverage html"
+
+
+install = "poetry build"
+post_install = "pipx install dist/syncro_git-0.1.0-py3-none-any.whl"
+
+uninstall = "pipx uninstall syncro_git"
