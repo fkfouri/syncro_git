@@ -1,3 +1,4 @@
+import os
 import shutil
 import sys
 import traceback
@@ -8,9 +9,7 @@ import click
 from git import Repo  # pip install gitpython
 from rich.console import Console
 
-
-THIS_PATH = Path(dirname(sys.executable)) if getattr(sys, "frozen", False) else Path(dirname(__file__))
-ROOT_PATH = THIS_PATH.parents[0]
+ROOT_PATH = Path(os.getcwd())
 REMOTE_CLONE = "origin_clone"
 
 
@@ -26,6 +25,7 @@ REMOTE_CLONE = "origin_clone"
 
 console = Console(style="yellow")
 
+
 @click.command()
 @click.option("--origin", "-o", required=True, default=None)
 @click.option("--destiny", "-d", required=True, default=None)
@@ -33,8 +33,7 @@ console = Console(style="yellow")
 @click.option("--branch", "-b", required=False, default=None)
 @click.option("--unit_test", required=False, default=False, type=bool)
 def syncro_git(origin, folder, branch, destiny, unit_test):
-    """This command will syncronize two git repositories
-    """    
+    """This command will syncronize two git repositories"""
     folder = get_folder(folder, origin)
     target_dir = get_target_dir(folder)
 
@@ -74,9 +73,9 @@ WORK_DIR: [purple]{target_dir}[/]
 
     remote = repo.remote(name=REMOTE_CLONE)
 
-    if not unit_test: # pragma: no cover
+    if not unit_test:  # pragma: no cover
         for branch in repo.branches:
-            if 'feature' not in branch.name:
+            if "feature" not in branch.name:
                 refspec = "{}:{}".format(branch, branch)
                 console.print(f"Push [bold blue]{branch}[/] to [bold blue]{REMOTE_CLONE}[/]")
                 remote.push(refspec=refspec)
@@ -84,11 +83,10 @@ WORK_DIR: [purple]{target_dir}[/]
     console.print(":thumbs_up: Done !!!")
 
 
-
 def get_folder(folder, origin):
     if folder is None:
-        folder = origin.split("/")[-1].replace(".git","")
-    
+        folder = origin.split("/")[-1].replace(".git", "")
+
     return folder
 
 
@@ -110,7 +108,6 @@ def get_all_branches(repo: Repo):
         except:  # pragma: no cover
             ...
     return repo
-
 
 
 if __name__ == "__main__":  # pragma: no cover
