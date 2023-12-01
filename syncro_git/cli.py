@@ -74,12 +74,6 @@ WORK_DIR: [purple]{target_dir}[/]
 
     remote = repo.remote(name=REMOTE_CLONE)
 
-    # tree = repo.head.commit.tree
-    # log = []
-    # log.append(git.remote("-v"))
-    # log.append(git.branch('-v', '-a'))
-
-
     if not unit_test: # pragma: no cover
         for branch in repo.branches:
             if 'feature' not in branch.name:
