@@ -5,6 +5,10 @@ description = ""
 authors = ["fabio.kfouri <fabio.kfouri@ubirata.ai>"]
 readme = "README.md"
 
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
 #######################################################
 # Dependencies
 #######################################################
@@ -21,10 +25,26 @@ isort = "^5.12.0"
 black = "^23.11.0"
 pytest-cov = "^4.1.0"
 
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
 
+#######################################################
+# Poetry Scripts & Taskipy
+#######################################################
+[tool.poetry.scripts]
+syncro_git = "syncro_git.cli:syncro_git"
+
+
+[tool.taskipy.tasks]
+pre_lint = "echo 'Black + Isort \n' && black . && isort ."
+lint = "echo 'RUFF \n' && ruff check . "
+
+test = "coverage run -m pytest -s -x -v --junitxml='./.pytest_cache/test-result.xml'"
+post_test = "coverage report -m && coverage html"
+
+
+install = "poetry build"
+post_install = "pipx install dist/syncro_git-0.1.0-py3-none-any.whl"
+
+uninstall = "pipx uninstall syncro_git"
 
 #######################################################
 # LINTERS - RUFF | Isort | Black
@@ -123,22 +143,3 @@ omit = [
     "dbx_gen_prospector/common.py",
 ]
 
-#######################################################
-# Poetry Scripts & Taskipy
-#######################################################
-[tool.poetry.scripts]
-syncro_git = "syncro_git.cli:syncro_git"
-
-
-[tool.taskipy.tasks]
-pre_lint = "echo 'Black + Isort \n' && black . && isort ."
-lint = "echo 'RUFF \n' && ruff check . "
-
-test = "coverage run -m pytest -s -x -v --junitxml='./.pytest_cache/test-result.xml'"
-post_test = "coverage report -m && coverage html"
-
-
-install = "poetry build"
-post_install = "pipx install dist/syncro_git-0.1.0-py3-none-any.whl"
-
-uninstall = "pipx uninstall syncro_git"

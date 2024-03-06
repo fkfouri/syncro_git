@@ -61,3 +61,21 @@ def test_exiting_folder():
 
     assert result.exit_code == 0
     assert "It's not a valid path." in result.output
+
+
+def test_cli_tmec_lakehouse():
+    runner = CliRunner()
+    result = runner.invoke(
+        cli.syncro_git,
+        [
+            "-o",
+            "git@gitlab.gerdau.digital:Industrial/gemeosupplychaintmecpin-lakehouse.git",
+            "-d",
+            "git@gitlab.ubirata.ai:tmec/lakehouse.git",
+            "--unit_test",
+            True,
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert "Done !!!" in result.output
